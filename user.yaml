@@ -1,0 +1,36 @@
+user:
+  - admin: true
+  - name: 'Misha'
+  - age: 18
+  - position: 'Full-stack developer'
+  - skills:
+      - name: 'Haskell'
+        level: 5
+        description: >
+          I know and love this programming language.
+          I have work experience
+      - name: 'C#'
+        level: 5
+        description: >
+          The most frequently used language due to its greater demand
+          I wrote a huge number of projects on it
+      - name: 'TypeScript'
+        level: 4
+        description:
+          The most preferred language for writing the frontend
+          I prefer to use React as a framework.
+  - place:
+      name: 'USA'
+      city: 'New York'
+      street: 'Fifth Avenue'
+      house: 12
+      room: 42
+  - pets:
+      - name: 'Idris'
+        breed: 'Welsh Corgi'
+        can-meow: no
+      - name: 'Vasya'
+        breed: 'Kurilian Bobtail'
+        can-meow: yes
+  - other:
+      - 'Like to listen a melodic music, to attend live concerts and walk'
