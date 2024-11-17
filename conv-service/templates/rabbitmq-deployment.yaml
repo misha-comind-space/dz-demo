@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.database.name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      components: {{ .Values.database.components }}
+  template:
+    metadata:
+      labels:
+        components: {{ .Values.database.components }}
+    spec:
+      containers:
+        - name: {{ .Values.database.name }}
+          image: "{{ .Values.database.image }}:{{ .Values.database.version }}"
+          ports:
+            - containerPort: {{ .Values.database.port }}
+          env:
+            {{- range .Values.database.envs }}
+            {{- $data := dict "name" $.Values.database.name "env" . }}
+            {{- include "env.template" $data | nindent 12 }}
+            {{- end }}
+          resources:
+            {{ .Values.database.resources | toYaml | nindent 12 }}
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
+              # subPath: rabbitmq
+            - name: rabbitmq-images
+              mountPath: /opt/app/volumes
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc

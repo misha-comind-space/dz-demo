@@ -1,7 +1,7 @@
 app:
   name: conv-app
   image: antonlarichev/conv-app
-  version: v1.2
+  version: 1.2
   components: frontend
   port: 80
   replicas: 1
@@ -10,5 +10,62 @@ app:
     memory: 128Mi
   host: conv.test
   path: /
+api:
+  name: conv-api
+  image: antonlarichev/conv-api
+  version: 1.0
+  components: backend
+  port: 3000
+  replicas: 1
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  envs:
+    - DATABASE_URL
+converter:
+  name: &converter converter
+  image: antonlarichev/conv-service
+  varsion: 1.0
+  components: *converter
+  replicas: 1
+  port: 3200
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+  envs:
+    - DATABASE_URL
 ingress:
   name: myingress
+env: test
+value:
+  requirements:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+users:
+  - name: Michael
+    role: admin
+  - name: Vasya
+    role: manager
+database:
+  name: &name rabbitmq
+  components: *name
+  image: *name
+  version: 3.12
+  user: &user demo
+  password: *user
+  host: rabbitmq-clusterip
+  port: 5672
+  queue: *user
+  envs:
+    - SEED_USERNAME
+    - SEED_USER_PASSWORD
+    - AMQP_USER
+    - AMQP_PASSWORD
+    # todo: - AMQP_HOSTNAME
+    - AMQP_QUEUE
+  resources:
+    limits:
+      cpu: 300m
+      memory: 512Mi

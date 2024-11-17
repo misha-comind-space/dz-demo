@@ -23,21 +23,17 @@ spec:
               memory: 500Mi
               cpu: 200m
           env:
-            - name: DATABASE_URL
+            - name: {{ .Values.api.env }}
               valueFrom:
                 secretKeyRef:
-                  name: conv-api-secret
-                  key: DATABASE_URL
-          volumeMounts:
-            - name: test
-              mountPath: /etc/test
-              readOnly: true
+                  name: {{ .Values.api.name }}-secret
+                  key: {{ .Values.api.env }}
           livenessProbe:
             exec:
               command:
                 - curl
                 - --fail
-                - http://localhost:3000/api
+                - "http://localhost:{{ .Values.api.port }}/api"
             initialDelaySeconds: 30
             periodSeconds: 5
             failureThreshold: 1

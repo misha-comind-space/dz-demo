@@ -17,7 +17,7 @@ spec:
         - name: converter
           image: antonlarichev/conv-service:1.0
           ports:
-            - containerPort: 3000
+            - containerPort: 3200
           resources:
             limits:
               memory: 500Mi
@@ -37,7 +37,7 @@ spec:
               command:
                 - curl
                 - --fail
-                - http://localhost:3000/api
+                - http://localhost:3200/api
             initialDelaySeconds: 30
             periodSeconds: 5
             failureThreshold: 1
@@ -46,7 +46,7 @@ spec:
               command:
                 - curl
                 - --fail
-                - http://localhost:3000/api
+                - http://localhost:3200/api
             periodSeconds: 10
             failureThreshold: 5
           readinessProbe:
@@ -54,7 +54,7 @@ spec:
               command:
                 - curl
                 - --fail
-                - http://localhost:3000/api
+                - http://localhost:3200/api
             initialDelaySeconds: 5
             periodSeconds: 5
       volumes:

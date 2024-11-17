@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.converter.name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      components: {{ .Values.converter.components }}
+  template:
+    metadata:
+      name: {{ .Values.converter.name }}
+      labels:
+        components: {{ .Values.converter.components }}
+    spec:
+      containers:
+        - name: {{ .Values.converter.name }}
+          image: "{{ .Values.converter.image }}:{{ .Values.converter.version }}"
+          ports:
+            - containerPort: {{ .Values.converter.port }}
+          resources:
+            {{ .Values.converter.resources | toYaml | nindent 12 }}
+          env:
+            {{- range .Values.converter.envs }}
+            {{- $data := dict "name" $.Values.converter.name "env" . }}
+            {{- include "env.template" $data | nindent 12 }}
+          volumeMounts:
+            - name: test
+              mountPath: /etc/test
+              readOnly: true
+          livenessProbe:
+            exec:
+              command:
+                - curl
+                - --fail
+                - "http://localhost:{{ .Values.converter.port }}/api"
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 1
+      volumes:
+        - name: test
+          configMap:
+            name: demo-config
