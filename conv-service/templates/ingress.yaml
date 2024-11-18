@@ -17,3 +17,10 @@ spec:
                 name: {{ .Values.app.name }}-clusterip
                 port:
                   number: {{ .Values.app.port }}
+          - pathType: Prefix
+            path: {{ .Values.api.path }}
+            backend:
+              service:
+                name: {{ .Values.api.name }}-clusterip
+                port:
+                  number: {{ .Values.api.port }}
